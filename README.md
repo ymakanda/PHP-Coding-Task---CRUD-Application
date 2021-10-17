@@ -32,10 +32,12 @@ Then open http://localhost:8000/ in a browser.
 Next you'll need to run migrations and seeder for creating admin user :
 
 ```bash 
-    php artisan migrate:refresh --seed
+    php artisan migrate
+    
 ```
 
 Now you can login with the following credential:
+After you ran php artisan db:seed
 
 ```bash
     Email: admin@gmail.com
