@@ -23,14 +23,14 @@
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="form-group">
-            <strong>First Name:</strong>
-            {{ $user->first_name }}
+            <strong>Name:</strong>
+            {{ $user->name }}
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="form-group">
             <strong>Last Name:</strong>
-            {{ $user->last_name }}
+            {{ $user->lastname }}
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12">

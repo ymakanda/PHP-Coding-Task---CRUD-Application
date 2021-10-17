@@ -45,22 +45,47 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $this->validate($request, [
-            'username' => 'required',
-            'string',
-            'max:20',
-            'unique:users',
-            'regex:/^\S*$/u',
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'username' => 'required|string|max:20|unique:users',
+            'name' => 'required',
+            'lastname' => 'required',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|same:confirm-password',
-            'roles' => 'required',
         ]);
+        if ($request->input('roles') == 'Admin') {
+            $this->validate(
+                $request,
+                [
+                    'password' => 'required|min:8|regex:/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/
+                    |same:confirm-password',
+                    'roles' => 'required',
+                ],
+                [
+                    'password.regex' =>
+                        'Password should contain min of 8 chars, one Uppercase letter and digits',
+                ]
+            );
+        }
+
+        $this->validate(
+            $request,
+            [
+                'password' => 'required|
+                min:4|regex:/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/
+                |same:confirm-password',
+                'roles' => 'required',
+            ],
+            [
+                'password.regex' =>
+                    'Password should contain min of 4 chars, one Uppercase letter and digits',
+            ]
+        );
 
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
+        $role = Role::where('name', $request->input('roles'))->first();
+
+        $input['is_admin'] = $role->name == 'Admin' ? true : false;
+        $input['role_id'] = $role->id;
 
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
@@ -107,18 +132,39 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'username' => 'required',
-            'string',
-            'max:20',
-            'unique:users',
-            'regex:/^\S*$/u',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'same:confirm-password',
-            'roles' => 'required',
+            'username' => 'required|string|max:20|unique:users',
+            'name' => 'required',
+            'lastname' => 'required',
+            'email' => 'required|email|unique:users,email',
         ]);
+        if ($request->input('roles') == 'Admin') {
+            $this->validate(
+                $request,
+                [
+                    'password' => 'required|min:8|regex:/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/
+                    |same:confirm-password',
+                    'roles' => 'required',
+                ],
+                [
+                    'password.regex' =>
+                        'Password should contain min of 8 chars, one Uppercase letter and digits',
+                ]
+            );
+        }
 
+        $this->validate(
+            $request,
+            [
+                'password' => 'required|
+                min:4|regex:/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/
+                |same:confirm-password',
+                'roles' => 'required',
+            ],
+            [
+                'password.regex' =>
+                    'Password should contain min of 4 chars, one Uppercase letter and digits',
+            ]
+        );
         $input = $request->all();
         if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);

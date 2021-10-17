@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class RegisterController extends Controller
 {
@@ -49,11 +50,52 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        if ($data['roles'] == 'Admin') {
+            return Validator::make(
+                $data,
+                [
+                    'username' => 'required|string|max:20|unique:users',
+                    'name' => ['required', 'string', 'max:255'],
+                    'lastname' => 'required',
+                    'email' => [
+                        'required',
+                        'string',
+                        'email',
+                        'max:255',
+                        'unique:users',
+                    ],
+                    'password' => 'required|min:8|regex:/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/
+                    |confirmed',
+                    'roles' => 'required',
+                ],
+                [
+                    'password.regex' =>
+                        'Password should contain min of 8 chars, one Uppercase letter and digits',
+                ]
+            );
+        }
+        return Validator::make(
+            $data,
+            [
+                'username' => 'required|string|max:20|unique:users',
+                'name' => ['required', 'string', 'max:255'],
+                'lastname' => 'required',
+                'email' => [
+                    'required',
+                    'string',
+                    'email',
+                    'max:255',
+                    'unique:users',
+                ],
+                'password' => 'required|min:4|regex:/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/
+                |confirmed',
+                'roles' => 'required',
+            ],
+            [
+                'password.regex' =>
+                    'Password should contain min of 4 chars, one Uppercase letter and digits',
+            ]
+        );
     }
 
     /**
@@ -64,10 +106,21 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $data['password'] = Hash::make($data['password']);
+        $role = Role::where('name', $data['roles'])->first();
+
+        $data['is_admin'] = $role->name == 'Admin' ? true : false;
+        $data['role_id'] = $role->id;
+
+        $user = User::create($data);
+        $user->assignRole($data['roles']);
+        return $user;
+    }
+
+    public function addToRegistrationForm()
+    {
+        $roles = Role::pluck('name', 'name')->all();
+
+        return view('auth.register', compact('roles'));
     }
 }

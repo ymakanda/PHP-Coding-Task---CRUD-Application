@@ -25,7 +25,7 @@
  <tr>
    <th>No</th>
    <th>User Name</th>
-   <th>First Name</th>
+   <th>Name</th>
    <th>Last Name</th>
    <th>Email</th>
    <th>Roles</th>
@@ -35,8 +35,8 @@
   <tr>
     <td>{{ ++$i }}</td>
     <td>{{ $user->username }}</td>
-    <td>{{ $user->first_name }}</td>
-    <td>{{ $user->last_name }}</td>
+    <td>{{ $user->name }}</td>
+    <td>{{ $user->lastname }}</td>
     <td>{{ $user->email }}</td>
     <td>
       @if(!empty($user->getRoleNames()))
