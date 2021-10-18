@@ -41,5 +41,5 @@ After you ran php artisan db:seed
 
 ```bash
     Email: admin@gmail.com
-    Password: 123456
+    Password: Admin123456
 ```
