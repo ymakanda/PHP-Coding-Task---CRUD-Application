@@ -127,6 +127,6 @@
     </body>
     <div class="text-center footer">
     <p class="text-center text-primary"><small>
-  <a href="mailto:ypmakanda@gmail.com">&copy; Yandiswa Makanda</a></small></p>
+  <a href="mailto:ypmakanda@gmail.com"> Copyright &copy; Yandiswa Makanda</a></small></p>
 </div>
 </html>
