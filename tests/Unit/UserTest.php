@@ -12,7 +12,7 @@ class UserTest extends TestCase
      * @return void
      */
     /** @test */
-    public function login_form()
+    public function any_one_can_access_login_form()
     {
         $response = $this->get('/login');
         $response->assertStatus(200);

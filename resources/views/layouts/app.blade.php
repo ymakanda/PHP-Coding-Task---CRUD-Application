@@ -16,9 +16,15 @@
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">
-            <img src="https://img.icons8.com/fluency/48/000000/laravel.png"/>
-            </a>
+             @guest
+                <a class="navbar-brand" href="{{ url('/') }}">
+                <img src="https://img.icons8.com/fluency/48/000000/laravel.png"/>
+                </a>
+                @else
+                <a class="navbar-brand" href="{{ url('/home') }}">
+                <img src="https://img.icons8.com/fluency/48/000000/laravel.png"/>
+                </a>
+             @endguest
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
