@@ -117,7 +117,7 @@ class RegisterController extends Controller
         return $user;
     }
 
-    public function addToRegistrationForm()
+    public function showRegistrationForm()
     {
         $roles = Role::pluck('name', 'name')->all();
 

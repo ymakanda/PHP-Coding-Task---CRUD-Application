@@ -132,10 +132,10 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'username' => 'required|string|max:20|unique:users',
+            // 'username' => 'required|string|max:20|unique:users',
             'name' => 'required',
             'lastname' => 'required',
-            'email' => 'required|email|unique:users,email',
+            // 'email' => 'required|email|unique:users,email',
         ]);
         if ($request->input('roles') == 'Admin') {
             $this->validate(

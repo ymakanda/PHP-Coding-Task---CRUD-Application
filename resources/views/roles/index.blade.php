@@ -48,7 +48,11 @@
     @endforeach
 </table>
 
-
 {!! $roles->render() !!}
+<style>
+  .w-5{
+    display:none;
+  }
+</style>
 
 @endsection

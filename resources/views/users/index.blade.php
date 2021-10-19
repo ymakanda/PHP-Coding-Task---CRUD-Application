@@ -62,6 +62,12 @@
  @endforeach
 </table>
 
+  {!! $data->render() !!}
+  
+<style>
+  .w-5{
+    display:none;
+  }
+</style>
 
-{!! $data->render() !!}
 @endsection
