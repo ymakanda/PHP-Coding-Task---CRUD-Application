@@ -19,13 +19,17 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $data = User::orderBy('id', 'DESC')->paginate(5);
-        return view('users.index', compact('data'))->with(
-            'i',
-            ($request->input('page', 1) - 1) * 5
-        );
+        $data = User::paginate(5);
+        return view('users.index', compact('data'));
     }
 
+    function fetch_data(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = User::paginate(5);
+            return view('users.pagination_data', compact('data'))->render();
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -194,8 +198,8 @@ class UserController extends Controller
     public function destroy($id)
     {
         User::find($id)->delete();
-        return redirect()
-            ->route('users.index')
-            ->with('success', 'User deleted successfully');
+        return response()->json([
+            'success' => 'User deleted successfully!',
+        ]);
     }
 }

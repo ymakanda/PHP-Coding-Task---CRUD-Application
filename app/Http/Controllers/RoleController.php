@@ -37,13 +37,16 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $roles = Role::orderBy('id', 'DESC')->paginate(5);
-        return view('roles.index', compact('roles'))->with(
-            'i',
-            ($request->input('page', 1) - 1) * 5
-        );
+        $roles = Role::paginate(5);
+        return view('roles.index', compact('roles'));
     }
-
+    function fetch_data(Request $request)
+    {
+        if ($request->ajax()) {
+            $roles = Role::paginate(5);
+            return view('roles.pagination_data', compact('roles'))->render();
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -155,8 +158,8 @@ class RoleController extends Controller
         DB::table('roles')
             ->where('id', $id)
             ->delete();
-        return redirect()
-            ->route('roles.index')
-            ->with('success', 'Role deleted successfully');
+        return response()->json([
+            'success' => 'Role deleted successfully!',
+        ]);
     }
 }

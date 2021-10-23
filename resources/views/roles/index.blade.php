@@ -22,37 +22,49 @@
     </div>
 @endif
 
+<div id="table_data">
+   @include('roles/pagination_data')
+</div>
 
-<table class="table table-bordered">
-  <tr>
-     <th>No</th>
-     <th>Name</th>
-     <th width="280px">Action</th>
-  </tr>
-    @foreach ($roles as $key => $role)
-    <tr>
-        <td>{{ ++$i }}</td>
-        <td>{{ $role->name }}</td>
-        <td>
-            <a class="btn btn-info" href="{{ route('roles.show',$role->id) }}">Show</a>
-            @can('role-edit')
-                <a class="btn btn-primary" href="{{ route('roles.edit',$role->id) }}">Edit</a>
-            @endcan
-            @can('role-delete')
-                {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
-                    {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-                {!! Form::close() !!}
-            @endcan
-        </td>
-    </tr>
-    @endforeach
-</table>
+<script>
+$(document).ready(function(){
+ $(document).on('click', '.pagination a', function(event){
+  event.preventDefault(); 
+  var page = $(this).attr('href').split('page=')[1];
+  fetch_data(page);
+ });
 
-{!! $roles->render() !!}
-<style>
-  .w-5{
-    display:none;
-  }
-</style>
+ function fetch_data(page)
+ {
+  $.ajax({
+   url:"/roles/fetch_data?page="+page,
+   success:function(data)
+   {
+    $('#table_data').html(data);
+   }
+  });
+ }
+ 
+$(".deleteRole").click(function(){
+    var id = $(this).data("id");
+    var token = $("meta[name='csrf-token']").attr("content");
+   
+    $.ajax(
+    {
+        url: "roles/"+id,
+        type: 'DELETE',
+        data: {
+            "id": id,
+            "_token": token,
+        },
+        success: function (){
+            console.log("it Works");
+            $('#roleid' +id).remove();
+        }
+    });
+   
+});
 
+});
+</script>
 @endsection

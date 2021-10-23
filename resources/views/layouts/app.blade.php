@@ -7,6 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'User Management System') }}</title>
     <!-- Scripts -->
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+ 
     <script src="{{ asset('js/app.js') }}" defer></script>
     <!-- Fonts -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -21,7 +23,7 @@
                 <img src="https://img.icons8.com/fluency/48/000000/laravel.png"/>
                 </a>
                 @else
-                <a class="navbar-brand" href="{{ url('/home') }}">
+                <a class="navbar-brand" href="{{ url('/users') }}">
                 <img src="https://img.icons8.com/fluency/48/000000/laravel.png"/>
                 </a>
              @endguest

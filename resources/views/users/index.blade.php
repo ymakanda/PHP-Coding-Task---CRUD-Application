@@ -21,55 +21,48 @@
   <p>{{ $message }}</p>
 </div>
 @endif
+<div id="table_data">
+   @include('users/pagination_data')
+</div>
 
+<script>
+$(document).ready(function(){
+ $(document).on('click', '.pagination a', function(event){
+  event.preventDefault(); 
+  var page = $(this).attr('href').split('page=')[1];
+  fetch_data(page);
+ });
 
-<table class="table table-bordered">
- <tr>
-   <th>No</th>
-   <th>User Name</th>
-   <th>Name</th>
-   <th>Last Name</th>
-   @role('Admin')
-   <th>Email</th>
-   <th>Roles</th>
+ function fetch_data(page)
+ {
+  $.ajax({
+   url:"/users/fetch_data?page="+page,
+   success:function(data)
+   {
+    $('#table_data').html(data);
+   }
+  });
+ }
+$(".deleteUser").click(function(){
+    var id = $(this).data("id");
+    var token = $("meta[name='csrf-token']").attr("content");
    
-   <th width="280px">Action</th>
-   @endrole
- </tr>
- @foreach ($data as $key => $user)
-  <tr>
-    <td>{{ ++$i }}</td>
-    <td>{{ $user->username }}</td>
-    <td>{{ $user->name }}</td>
-    <td>{{ $user->lastname }}</td>
-    @role('Admin')
-      <td>{{ $user->email }}</td>
-      <td>
-        @if(!empty($user->getRoleNames()))
-          @foreach($user->getRoleNames() as $v)
-            <label class="badge badge-success">{{ $v }}</label>
-          @endforeach
-        @endif
-      </td>
-    
-      <td>
-        <a class="btn btn-info" href="{{ route('users.show',$user->id) }}">Show</a>
-        <a class="btn btn-primary" href="{{ route('users.edit',$user->id) }}">Edit</a>
-          {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}
-              {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-          {!! Form::close() !!}
-      </td>
-    @endrole
-  </tr>
- @endforeach
-</table>
+    $.ajax(
+    {
+        url: "users/"+id,
+        type: 'DELETE',
+        data: {
+            "id": id,
+            "_token": token,
+        },
+        success: function (){
+            console.log("it Works");
+            $('#userid' +id).remove();
+        }
+    });
+   
+});
 
-  {!! $data->render() !!}
-  
-<style>
-  .w-5{
-    display:none;
-  }
-</style>
-
+});
+</script>
 @endsection
