@@ -23,9 +23,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [UserController::class, 'index'])->name('home');
-
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('users/fetch_data', [UserController::class, 'fetch_data']);
+    Route::delete('/roles/{id}', [UserController::class, 'destroy']);
+    Route::get('roles/fetch_data', [RoleController::class, 'fetch_data']);
+    Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
 });
