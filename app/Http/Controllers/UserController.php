@@ -19,6 +19,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $user = \Auth::user();
+        // $this->authorize('view', $user);
         $data = User::paginate(5);
         return view('users.index', compact('data'));
     }
@@ -37,6 +39,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        $user = \Auth::user();
+        $this->authorize('create', $user);
+
         $roles = Role::pluck('name', 'name')->all();
         return view('users.create', compact('roles'));
     }
@@ -49,6 +54,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->input('roles'));
         $this->validate($request, [
             'username' => 'required|string|max:20|unique:users',
             'name' => 'required',
@@ -119,6 +125,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        $user = \Auth::user();
+        $this->authorize('update', $user);
+
         $user = User::find($id);
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
@@ -135,6 +144,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = \Auth::user();
+        $this->authorize('update', $user);
+
         $this->validate($request, [
             // 'username' => 'required|string|max:20|unique:users',
             'name' => 'required',
@@ -197,6 +209,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $user = \Auth::user();
+        $this->authorize('delete', $user);
+
         User::find($id)->delete();
         return response()->json([
             'success' => 'User deleted successfully!',
